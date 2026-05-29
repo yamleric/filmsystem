@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
+    <constant name="struts.objectFactory" value="spring"/>
+    <constant name="struts.i18n.encoding" value="UTF-8"/>
+    <constant name="struts.locale" value="zh_CN"/>
+    <constant name="struts.devMode" value="false"/>
+    <constant name="struts.enable.DynamicMethodInvocation" value="false"/>
+    <constant name="struts.multipart.maxSize" value="2147483647"/>
+
+    <package name="public" namespace="/" extends="struts-default">
+        <global-allowed-methods>login,logout,list,publicList,view</global-allowed-methods>
+
+        <action name="login" class="authAction" method="login">
+            <result name="input">/WEB-INF/jsp/login.jsp</result>
+            <result name="success" type="redirectAction">
+                <param name="namespace">/admin</param>
+                <param name="actionName">dashboard</param>
+            </result>
+        </action>
+
+        <action name="logout" class="authAction" method="logout">
+            <result name="success" type="redirectAction">
+                <param name="namespace">/</param>
+                <param name="actionName">login</param>
+            </result>
+        </action>
+
+        <action name="news" class="newsAction" method="publicList">
+            <result>/WEB-INF/jsp/public/news-list.jsp</result>
+        </action>
+
+        <action name="news-view" class="newsAction" method="view">
+            <result>/WEB-INF/jsp/public/news-view.jsp</result>
+            <result name="input" type="redirectAction">
+                <param name="namespace">/</param>
+                <param name="actionName">news</param>
+            </result>
+        </action>
+    </package>
+
+    <package name="admin" namespace="/admin" extends="struts-default">
+        <interceptors>
+            <interceptor name="auth" class="com.filmsystem.interceptor.AuthInterceptor"/>
+            <interceptor-stack name="authStack">
+                <interceptor-ref name="auth"/>
+                <interceptor-ref name="defaultStack">
+                    <param name="fileUpload.maximumSize">2147483647</param>
+                    <param name="fileUpload.allowedExtensions">jpg,jpeg,png,gif,webp,mp4,avi,mkv,mov,wmv,flv</param>
+                </interceptor-ref>
+            </interceptor-stack>
+        </interceptors>
+        <default-interceptor-ref name="authStack"/>
+        <global-results>
+            <result name="login" type="redirectAction">
+                <param name="namespace">/</param>
+                <param name="actionName">login</param>
+            </result>
+        </global-results>
+        <global-allowed-methods>execute,list,add,edit,save,update,delete,view,passwordForm,changePassword</global-allowed-methods>
+
+        <action name="dashboard" class="dashboardAction">
+            <result>/WEB-INF/jsp/admin/dashboard.jsp</result>
+        </action>
+
+        <action name="user-list" class="userAction" method="list">
+            <result>/WEB-INF/jsp/admin/user/list.jsp</result>
+        </action>
+        <action name="user-add" class="userAction" method="add">
+            <result>/WEB-INF/jsp/admin/user/form.jsp</result>
+        </action>
+        <action name="user-edit" class="userAction" method="edit">
+            <result>/WEB-INF/jsp/admin/user/form.jsp</result>
+            <result name="input" type="redirectAction"><param name="actionName">user-list</param></result>
+        </action>
+        <action name="user-save" class="userAction" method="save">
+            <result name="success" type="redirectAction"><param name="actionName">user-list</param></result>
+            <result name="input">/WEB-INF/jsp/admin/user/form.jsp</result>
+        </action>
+        <action name="user-update" class="userAction" method="update">
+            <result name="success" type="redirectAction"><param name="actionName">user-list</param></result>
+            <result name="input">/WEB-INF/jsp/admin/user/form.jsp</result>
+        </action>
+        <action name="user-delete" class="userAction" method="delete">
+            <result name="success" type="redirectAction"><param name="actionName">user-list</param></result>
+        </action>
+        <action name="password" class="userAction" method="passwordForm">
+            <result>/WEB-INF/jsp/admin/user/password.jsp</result>
+        </action>
+        <action name="password-update" class="userAction" method="changePassword">
+            <result name="success">/WEB-INF/jsp/admin/user/password.jsp</result>
+            <result name="input">/WEB-INF/jsp/admin/user/password.jsp</result>
+        </action>
+
+        <action name="news-list" class="newsAction" method="list">
+            <result>/WEB-INF/jsp/admin/news/list.jsp</result>
+        </action>
+        <action name="news-add" class="newsAction" method="add">
+            <result>/WEB-INF/jsp/admin/news/form.jsp</result>
+        </action>
+        <action name="news-edit" class="newsAction" method="edit">
+            <result>/WEB-INF/jsp/admin/news/form.jsp</result>
+            <result name="input" type="redirectAction"><param name="actionName">news-list</param></result>
+        </action>
+        <action name="news-save" class="newsAction" method="save">
+            <result name="success" type="redirectAction"><param name="actionName">news-list</param></result>
+            <result name="input">/WEB-INF/jsp/admin/news/form.jsp</result>
+        </action>
+        <action name="news-update" class="newsAction" method="update">
+            <result name="success" type="redirectAction"><param name="actionName">news-list</param></result>
+            <result name="input">/WEB-INF/jsp/admin/news/form.jsp</result>
+        </action>
+        <action name="news-delete" class="newsAction" method="delete">
+            <result name="success" type="redirectAction"><param name="actionName">news-list</param></result>
+        </action>
+        <action name="news-detail" class="newsAction" method="view">
+            <result>/WEB-INF/jsp/admin/news/view.jsp</result>
+            <result name="input" type="redirectAction"><param name="actionName">news-list</param></result>
+        </action>
+
+        <action name="category-list" class="categoryAction" method="list">
+            <result>/WEB-INF/jsp/admin/category/list.jsp</result>
+        </action>
+        <action name="category-add" class="categoryAction" method="add">
+            <result>/WEB-INF/jsp/admin/category/form.jsp</result>
+        </action>
+        <action name="category-edit" class="categoryAction" method="edit">
+            <result>/WEB-INF/jsp/admin/category/form.jsp</result>
+            <result name="input" type="redirectAction"><param name="actionName">category-list</param></result>
+        </action>
+        <action name="category-save" class="categoryAction" method="save">
+            <result name="success" type="redirectAction"><param name="actionName">category-list</param></result>
+            <result name="input">/WEB-INF/jsp/admin/category/form.jsp</result>
+        </action>
+        <action name="category-update" class="categoryAction" method="update">
+            <result name="success" type="redirectAction"><param name="actionName">category-list</param></result>
+            <result name="input">/WEB-INF/jsp/admin/category/form.jsp</result>
+        </action>
+        <action name="category-delete" class="categoryAction" method="delete">
+            <result name="success" type="redirectAction"><param name="actionName">category-list</param></result>
+        </action>
+
+        <action name="film-list" class="filmAction" method="list">
+            <result>/WEB-INF/jsp/admin/film/list.jsp</result>
+        </action>
+        <action name="film-add" class="filmAction" method="add">
+            <result>/WEB-INF/jsp/admin/film/form.jsp</result>
+        </action>
+        <action name="film-edit" class="filmAction" method="edit">
+            <result>/WEB-INF/jsp/admin/film/form.jsp</result>
+            <result name="input" type="redirectAction"><param name="actionName">film-list</param></result>
+        </action>
+        <action name="film-save" class="filmAction" method="save">
+            <result name="success" type="redirectAction"><param name="actionName">film-list</param></result>
+            <result name="input">/WEB-INF/jsp/admin/film/form.jsp</result>
+        </action>
+        <action name="film-update" class="filmAction" method="update">
+            <result name="success" type="redirectAction"><param name="actionName">film-list</param></result>
+            <result name="input">/WEB-INF/jsp/admin/film/form.jsp</result>
+        </action>
+        <action name="film-delete" class="filmAction" method="delete">
+            <result name="success" type="redirectAction"><param name="actionName">film-list</param></result>
+        </action>
+        <action name="film-detail" class="filmAction" method="view">
+            <result>/WEB-INF/jsp/admin/film/view.jsp</result>
+            <result name="input" type="redirectAction"><param name="actionName">film-list</param></result>
+        </action>
+    </package>
+</struts>

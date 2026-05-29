@@ -1,0 +1,13 @@
+target/
+.run-tomcat/
+.idea/
+*.class
+*.war
+*.log
+*.iml
+.env
+.env.*
+!.env.example
+src/main/resources/db.properties
+!src/main/resources/db.properties.example
+src/main/webapp/uploads/
